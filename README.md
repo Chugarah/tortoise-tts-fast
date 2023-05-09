@@ -85,7 +85,8 @@ There are two methods for installation.
 
 ### Docker
 
-The installation process is identical to the original tortoise-tts repo.
+Docker provided by <https://github.com/louispaulet>
+the_french_artist
 
 ```shell
 docker-compose up --build
