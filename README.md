@@ -1,19 +1,21 @@
-# this repo is now maintenance only; please develop a fork || use the mrq repo if you have large features to submit
+# this repo is now maintenance only; please develop a fork or use the mrq repo if you have large features to submit
 
-### recent updates
+## recent updates
 
 - BigVGAN-base is now used in place of Univnet by default. (thank you to @deviandice for the example implementation)
-- `--sampler dpm++2m` is now **fixed**, and actually uses dpm++2m. see [here](https://github.com/152334H/tortoise-tts-fast/issues/2) for more discussion
+- `--sampler dpm++2m` is now **fixed**, and actually uses dpm++2m. See [here](https://github.com/152334H/tortoise-tts-fast/issues/2) for more discussion.
 - `--kv_cache` is now **fixed**, and produces outputs **identical to the original tortoise repo**. It is also enabled by default now because of this.
-- new: :sparkles: [streamlit webui](#Webui) by @Ryu
+- New: :sparkles: [streamlit webui](#webui) by @Ryu
 - Want better voice cloning? We now have [tortoise fine-tuning](https://github.com/152334H/DL-Art-School); load fine-tuned GPT models with `--ar-checkpoint`!
-- added [voicefixer](https://github.com/haoheliu/voicefixer)
+- Added [voicefixer](https://github.com/haoheliu/voicefixer)
 
-[click me](#installation) to skip to installation && usage!
+[Click here](#installation) to skip to installation and usage!
+
+<https://github.com/152334H/tortoise-tts-fast/issues/60>
 
 ---
 
-# Speeding up TorToiSe inference 5x
+## Speeding up TorToiSe inference 5x
 
 This is a working project to drastically boost the performance of TorToiSe, without modifying the base models. **Expect speedups of _5~10x_**, and hopefully 20x or larger when this project is complete.
 
@@ -22,11 +24,11 @@ This repo adds the following config options for TorToiSe for faster inference:
 - [x] (`--kv_cache`) enabling of [KV cache](https://kipp.ly/blog/transformer-inference-arithmetic/#kv-cache) for MUCH faster GPT sampling
 - [x] (`--half`) half precision inference where possible
 - [x] (`--sampler dpm++2m`) [DPM-Solver](https://github.com/LuChengTHU/dpm-solver) samplers for better diffusion
-- [x] (disable with `--low_vram`) option to toggle cpu offloading, for high vram users
+- [x] (disable with `--low_vram`) option to toggle CPU offloading, for high VRAM users
 
 All changes in this fork are licensed under the **AGPL**. For avoidance beyond all doubt, the [following statement](https://en.wikipedia.org/wiki/Apache_License#Licensing_conditions) is added as a comment to all changed code files:
 
-> `AGPL: a notification must be added stating that changes have been made to that file. `
+> `AGPL: a notification must be added stating that changes have been made to that file.`
 
 ## Current results
 
@@ -36,22 +38,22 @@ All results listed were generated with a slightly undervolted RTX 3090 on Ubuntu
 ./script/tortoise-tts.py --voice emma --seed 42 --text "$TEXT"
 ```
 
-### **NOTE**: samples here are somewhat old; they don't have `voicefixer` applied.
+### **NOTE**: samples here are somewhat old; they don't have `voicefixer` applied
 
 Original TorToiSe [repo](https://github.com/neonbjb/tortoise-tts):
-| speed (B) | speed (A) | preset | sample |
-|-|-|-|-|
-| 112.81s | 14.94s | ultra_fast | [here](optimized_examples/A/tortoise_original-with_original_vram/) |
+| speed (B) | speed (A) | preset     | sample                                                             |
+| --------- | --------- | ---------- | ------------------------------------------------------------------ |
+| 112.81s   | 14.94s    | ultra_fast | [here](optimized_examples/A/tortoise_original-with_original_vram/) |
 
 New [repo](https://github.com/152334H/tortoise-tts), with `--preset ultra_fast`:
-| speed (B) | speed (A) | GPT kv-cache | sampler | steps | cond-free diffusion | autocast to fp16 | samples (vs orig repo) |
-|-|-|-|-|-|-|-|-|
-| 118.61 | 11.20 | ❌ | DDIM | 30 | ❌ | ❌ | [identical](optimized_examples/A/tortoise_original/) |
-| 9.98 | 4.17 | ✅ | DDIM | 30 | ❌ | ❌ | [identical](optimized_examples/A/tortoise_original-kv_cache/) |
-| 14.32 | 5.58 | ✅ | DPM++2M | 30 | ✅ | ❌ | [**best**](optimized_examples/A/very_fast-ar16/) |
-| 7.51 | 3.26 | ✅ | DDIM | 10 | ✅ | ❌ | [~identical](optimized_examples/A/ultra_fast-kv_cache/) |
-| 7.12 | 3.30 | ✅ | DDIM | 10 | ✅ | ✅ | [okayish](optimized_examples/A/ultra_fast-kv_cache-half/) |
-| 7.21 | 3.27 | ✅ | DDIM | 10 | ❌ | ✅ | [bad](optimized_examples/A/ultra_fast-kv_cache-half-no_cond_tree/) |
+| speed (B) | speed (A) | GPT kv-cache | sampler | steps | cond-free diffusion | autocast to fp16 | samples (vs orig repo)                                             |
+| --------- | --------- | ------------ | ------- | ----- | ------------------- | ---------------- | ------------------------------------------------------------------ |
+| 118.61    | 11.20     | ❌            | DDIM    | 30    | ❌                   | ❌                | [identical](optimized_examples/A/tortoise_original/)               |
+| 9.98      | 4.17      | ✅            | DDIM    | 30    | ❌                   | ❌                | [identical](optimized_examples/A/tortoise_original-kv_cache/)      |
+| 14.32     | 5.58      | ✅            | DPM++2M | 30    | ✅                   | ❌                | [**best**](optimized_examples/A/very_fast-ar16/)                   |
+| 7.51      | 3.26      | ✅            | DDIM    | 10    | ✅                   | ❌                | [~identical](optimized_examples/A/ultra_fast-kv_cache/)            |
+| 7.12      | 3.30      | ✅            | DDIM    | 10    | ✅                   | ✅                | [okayish](optimized_examples/A/ultra_fast-kv_cache-half/)          |
+| 7.21      | 3.27      | ✅            | DDIM    | 10    | ❌                   | ✅                | [bad](optimized_examples/A/ultra_fast-kv_cache-half-no_cond_tree/) |
 
 Results measure the time taken to run **`tts.tts_with_preset(...)`** using the CLI.
 
@@ -81,17 +83,45 @@ Half precision currently significantly worsens outputs, so I do not recommend en
 
 There are two methods for installation.
 
-### pure python install
+### Docker
 
 The installation process is identical to the original tortoise-tts repo.
 
 ```shell
-git clone https://github.com/152334H/tortoise-tts-fast
-cd tortoise-tts-fast
-pip3 install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu117
-python3 -m pip install -e .
-pip3 install git+https://github.com/152334H/BigVGAN.git
+docker-compose up --build
 ```
+
+### Windows & Conda Install
+
+This is for windows users
+
+### Install Conda
+
+If you are installing Torch you need to check your CUDA version
+type nvidia-smi in cmd to check your CUDA version. Based on your CUDA version go to <https://pytorch.org/get-started/locally/> and select your CUDA version and install the corresponding pytorch version.
+
+  ```shell
+  # Conda create environment
+conda create -n tortoise-fast python=3.8
+conda install pytorch==1.13.1 torchvision==0.14.1 torchaudio==0.13.1 pytorch-cuda=11.7 -c pytorch -c nvidia
+  ```
+
+### Installing It
+
+Install C++ Build tools v14 using Visual Studio installer.
+Select C++ Build tools and install it. Select all even 2015, 2017, 2019. Restart your command prompt.
+In case anyone is currently (2017) facing same error with visual C++ 2015 tools, launch setup again and also select windows 8.1 / 10/11 SDK depending upon your OS. This will fix basestd.h error.
+I give up. I re-tried one last 15'th time through a Python Venv, after installing buildtools for C++ v14+ + windows 10 sdk.
+
+<https://python-poetry.org/docs/>
+
+  ```shell
+(Invoke-WebRequest -Uri https://install.python-poetry.org -UseBasicParsing).Content | py -
+
+
+pip install -e .
+pip install git+https://github.com/152334H/BigVGAN.git
+  ```
 
 Note that if you have the original tortoise installed,
 
@@ -151,12 +181,12 @@ If you want to load a [fine-tuned autoregressive model](https://github.com/15233
 An experimental [Streamlit](https://streamlit.io/) web UI is now available. To access, run:
 
 ```bash
-$ streamlit run script/app.py
+streamlit run script/app.py
 ```
 
-![](./static/webui_simple.png)
+![A screenshot of a simple web user interface with a dark background. The interface consists of a search bar, a results section, and a settings menu on the left-hand side.](./static/webui_simple.png)
 
-![](./static/webui_advanced.png)
+![A screenshot of an advanced web user interface with a light background. The interface consists of a search bar, a results section with more detailed information than in the simple interface, and a settings menu on the right-hand side. Additionally, there are tabs for different categories of results, and a "Filter" button.](./static/webui_advanced.png)
 
 ## Future plans
 
@@ -179,13 +209,14 @@ QoL related:
 
 As stated by an [11Labs](https://beta.elevenlabs.io) developer:
 
-![](https://cdn.discordapp.com/attachments/1070203929410940988/1071295918269272124/Screenshot_20230204-130541_Discord.png)
+![A screenshot of a Discord chat with a warning message about missing alt text for an image](https://cdn.discordapp.com/attachments/1070203929410940988/1071295918269272124/Screenshot_20230204-130541_Discord.png "Screenshot of a Discord chat with a warning message about missing alt text")
+g)
 
 Original README description:
 
 ---
 
-# TorToiSe
+## TorToiSe
 
 Tortoise is a text-to-speech program built with the following priorities:
 
@@ -195,7 +226,7 @@ Tortoise is a text-to-speech program built with the following priorities:
 This repo contains all the code needed to run Tortoise TTS in inference mode.
 
 A (_very_) rough draft of the Tortoise paper is now available in doc format. I would definitely appreciate any comments, suggestions or reviews:
-https://docs.google.com/document/d/13O_eyY65i6AkNrN_LdPhpUjGhyTNKYHvDrIvHnHe1GA
+<https://docs.google.com/document/d/13O_eyY65i6AkNrN_LdPhpUjGhyTNKYHvDrIvHnHe1GA>
 
 ### Version history
 
@@ -233,14 +264,14 @@ sampling rates. On a K80, expect to generate a medium sized sentence every 2 min
 
 See [this page](http://nonint.com/static/tortoise_v2_examples.html) for a large list of example outputs.
 
-Cool application of Tortoise+GPT-3 (not by me): https://twitter.com/lexman_ai
+Cool application of Tortoise+GPT-3 (not by me): <https://twitter.com/lexman_ai>
 
 ## Usage guide
 
 ### Colab
 
 Colab is the easiest way to try this out. I've put together a notebook you can use here:
-https://colab.research.google.com/github/152334H/tortoise-tts-fast/blob/main/tortoise_tts.ipynb
+<https://colab.research.google.com/github/152334H/tortoise-tts-fast/blob/main/tortoise_tts.ipynb>
 
 ### Local Installation
 
@@ -377,7 +408,7 @@ Alternatively, use the api.TextToSpeech.get_conditioning_latents() to fetch the 
 After you've played with them, you can use them to generate speech by creating a subdirectory in voices/ with a single
 ".pth" file containing the pickled conditioning latents as a tuple (autoregressive_latent, diffusion_latent).
 
-### Send me feedback!
+### Send me feedback
 
 Probabilistic models like Tortoise are best thought of as an "augmented search" - in this case, through the space of possible
 utterances of a specific string of text. The impact of community involvement in perusing these spaces (such as is being done with

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # AGPL: a notification must be added stating that changes have been made to that file.
-
+import folder_config
 import os
 import sys
 import tempfile
@@ -335,7 +335,8 @@ if __name__ == "__main__":
         for text_idx, text in enumerate(texts):
             clip_name = f'{"-".join(voice)}_{text_idx:02d}'
             if args.output.output_dir:
-                first_clip = os.path.join(args.output.output_dir, f"{clip_name}_00.wav")
+                first_clip = os.path.join(
+                    args.output.output_dir, f"{clip_name}_00.wav")
                 if (
                     args.multi_output.skip_existing
                     or (regenerate_clips and text_idx not in regenerate_clips)
@@ -362,7 +363,8 @@ if __name__ == "__main__":
                     audio_parts.append(audio)
                 if args.output.output_dir:
                     filename = f"{clip_name}_{candidate_idx:02d}.wav"
-                    save_gen_with_voicefix(audio, os.path.join(args.output.output_dir, filename), squeeze=False, voicefixer=args.general.voicefixer)
+                    save_gen_with_voicefix(audio, os.path.join(
+                        args.output.output_dir, filename), squeeze=False, voicefixer=args.general.voicefixer)
 
         audio = torch.cat(audio_parts, dim=-1)
         if args.output.output_dir:
@@ -375,7 +377,8 @@ if __name__ == "__main__":
             )
         elif args.output.output:
             filename = args.output.output or os.tmp
-            save_gen_with_voicefix(audio, filename, squeeze=False, voicefixer=args.general.voicefixer)
+            save_gen_with_voicefix(
+                audio, filename, squeeze=False, voicefixer=args.general.voicefixer)
         elif args.output.play:
             print("WARNING: cannot use voicefixer with --play")
             f = tempfile.NamedTemporaryFile(suffix=".wav", delete=True)
@@ -384,7 +387,9 @@ if __name__ == "__main__":
 
         if args.advanced.produce_debug_state:
             os.makedirs("debug_states", exist_ok=True)
-            dbg_state = (seed, texts, voice_samples, conditioning_latents, args)
+            dbg_state = (seed, texts, voice_samples,
+                         conditioning_latents, args)
             torch.save(
-                dbg_state, os.path.join("debug_states", f'debug_{"-".join(voice)}.pth')
+                dbg_state, os.path.join(
+                    "debug_states", f'debug_{"-".join(voice)}.pth')
             )

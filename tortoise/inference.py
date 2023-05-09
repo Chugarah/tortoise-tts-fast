@@ -1,3 +1,8 @@
+from voicefixer import VoiceFixer
+import torchaudio
+import torch
+from typing import Any, Callable
+from pathlib import Path
 import os
 import sys
 from random import randint
@@ -8,13 +13,16 @@ from tortoise.utils.text import split_and_recombine_text
 
 
 def get_all_voices(extra_voice_dirs_str: str = ""):
-    extra_voice_dirs = extra_voice_dirs_str.split(",") if extra_voice_dirs_str else []
+    extra_voice_dirs = extra_voice_dirs_str.split(
+        ",") if extra_voice_dirs_str else []
     return sorted(get_voices(extra_voice_dirs)), extra_voice_dirs
 
 
 def parse_voice_str(voice_str: str, all_voices: List[str]):
-    selected_voices = all_voices if voice_str == "all" else voice_str.split(",")
-    selected_voices = [v.split("&") if "&" in v else [v] for v in selected_voices]
+    selected_voices = all_voices if voice_str == "all" else voice_str.split(
+        ",")
+    selected_voices = [v.split("&") if "&" in v else [v]
+                       for v in selected_voices]
     for voices in selected_voices:
         for v in voices:
             if v != "random" and v not in all_voices:
@@ -55,9 +63,11 @@ def validate_output_dir(output_dir: str, selected_voices: list, candidates: int)
         os.makedirs(output_dir, exist_ok=True)
     else:
         if len(selected_voices) > 1:
-            raise ValueError('cannot have multiple voices without --output-dir"')
+            raise ValueError(
+                'cannot have multiple voices without --output-dir"')
         if candidates > 1:
-            raise ValueError('cannot have multiple candidates without --output-dir"')
+            raise ValueError(
+                'cannot have multiple candidates without --output-dir"')
     return output_dir
 
 
@@ -76,13 +86,6 @@ def check_pydub(play: bool):
 
 def get_seed(seed: Optional[int]):
     return randint(0, 2**32 - 1) if seed is None else seed
-
-
-from pathlib import Path
-from typing import Any, Callable
-
-import torch
-import torchaudio
 
 
 def run_and_save_tts(
@@ -106,7 +109,8 @@ def run_and_save_tts(
     fps = []
     for i, g in enumerate(gen):
         fps.append(output_dir / f"{i}.wav")
-        save_gen_with_voicefix(g, fps[-1], squeeze=False, voicefixer=voicefixer)
+        save_gen_with_voicefix(
+            g, fps[-1], squeeze=False, voicefixer=voicefixer)
         # torchaudio.save(output_dir/f'{i}.wav', g, 24000)
     return fps if return_filepaths else gen
 
@@ -162,13 +166,12 @@ def infer_on_texts(
     return fnames if return_filepaths else results
 
 
-from voicefixer import VoiceFixer
-
 vfixer = VoiceFixer()
 
 
 def save_gen_with_voicefix(g, fpath, squeeze=True, voicefixer=True):
-    torchaudio.save(fpath, g.squeeze(0).cpu() if squeeze else g, 24000, format="wav")
+    torchaudio.save(fpath, g.squeeze(0).cpu()
+                    if squeeze else g, 24000, format="wav")
     if voicefixer:
         vfixer.restore(
             input=fpath,
