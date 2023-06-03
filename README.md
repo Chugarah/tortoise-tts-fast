@@ -81,7 +81,11 @@ Half precision currently significantly worsens outputs, so I do not recommend en
 
 ### AMD INSTALLATION IS NOT SUPPORTED, please don't try it
 
-There are two methods for installation.
+There are three methods for installation. Choose one of them that you are happy with :)
+
+1. Docker
+2. Windows & Conda
+3. Poetry
 
 ### Docker
 
