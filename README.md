@@ -117,9 +117,6 @@ I give up. I re-tried one last 15'th time through a Python Venv, after installin
 <https://python-poetry.org/docs/>
 
   ```shell
-(Invoke-WebRequest -Uri https://install.python-poetry.org -UseBasicParsing).Content | py -
-
-
 pip install -e .
 pip install git+https://github.com/152334H/BigVGAN.git
   ```
@@ -135,6 +132,10 @@ Note that if you have the original tortoise installed,
 First, [install Poetry](https://python-poetry.org/docs/). Then, run:
 
 ```shell
+# Windows Users
+(Invoke-WebRequest -Uri https://install.python-poetry.org -UseBasicParsing).Content | py -
+
+
 poetry install
 poetry shell
 ```
